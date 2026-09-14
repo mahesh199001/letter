@@ -347,7 +347,11 @@ h1 {
 
 blockquote {
   margin: 0;
-  font-family: 'Noto Serif Gujarati', serif;
+  font-family: 'Noto Sans Gujarati', sans-serif;
+  font-weight: 600;
+  font-kerning: normal;
+  font-variant-ligatures: normal;
+  text-rendering: optimizeLegibility;
   font-size: clamp(1.9rem, 3vw, 3rem);
   line-height: 1.12;
   color: var(--text);

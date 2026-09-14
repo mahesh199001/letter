@@ -132,6 +132,7 @@ function updateClock() {
   document.getElementById('dayDisplay').textContent = day;
   document.getElementById('timeDisplay').textContent = time;
   document.getElementById('timeMood').textContent = `${timeInfo.label}ની રોશની ${getTimeEmoji(timeInfo.label)}`;
+  document.getElementById('letterGreeting').textContent = getTimeGreeting(southCarolinaTime);
   document.body.dataset.theme = timeInfo.theme;
 }
 
