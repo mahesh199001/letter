@@ -110,7 +110,7 @@ begin
 end;
 $$;
 
-create or replace function public.create_manual_shayari(p_slot bigint)
+create or replace function public.create_manual_shayari(p_slot bigint, p_next_time timestamptz)
 returns jsonb
 language plpgsql
 security definer
@@ -125,15 +125,16 @@ begin
   update public.shayari_state
   set total_created = total_created + 1,
       last_created_at = now(),
+      next_created_at = p_next_time,
       current_slot = p_slot,
       current_shayari = created
   where id = true;
-  return created || jsonb_build_object('total_created', state.total_created + 1, 'last_created_at', now(), 'next_created_at', state.next_created_at);
+  return created || jsonb_build_object('total_created', state.total_created + 1, 'last_created_at', now(), 'next_created_at', p_next_time);
 end;
 $$;
 
 grant execute on function public.get_current_shayari(bigint, timestamptz) to anon, authenticated;
-grant execute on function public.create_manual_shayari(bigint) to anon, authenticated;
+grant execute on function public.create_manual_shayari(bigint, timestamptz) to anon, authenticated;
 revoke all on public.shayari_state from anon, authenticated;
 revoke all on public.shayaris from anon, authenticated;
 

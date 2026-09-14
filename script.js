@@ -276,17 +276,27 @@ function updateVisitLog() {
 
 function initializePage() {
   currentShayariIndex = pickTimeBasedIndex();
-  renderShayari(currentShayariIndex);
-  if (!hasSupabase) incrementShayariCount();
+  if (!hasSupabase) {
+    renderShayari(currentShayariIndex);
+    incrementShayariCount();
+  }
   updateClock();
   updateVisitLog();
-  loadSharedShayari();
+  loadSharedShayari().then((loaded) => {
+    if (!loaded && hasSupabase) {
+      renderShayari(currentShayariIndex);
+      incrementShayariCount();
+    }
+  });
 }
 
 document.getElementById('refreshButton').addEventListener('click', async () => {
   if (hasSupabase) {
     try {
-      const result = await callSupabase('create_manual_shayari', { p_slot: getHalfHourSlot(getSouthCarolinaTime()) });
+      const result = await callSupabase('create_manual_shayari', {
+        p_slot: getHalfHourSlot(getSouthCarolinaTime()),
+        p_next_time: getNextBoundary().toISOString()
+      });
       renderMessage(result);
       updateSharedStats(result);
       return;
