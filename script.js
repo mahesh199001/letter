@@ -200,9 +200,7 @@ async function loadSharedShayari() {
 }
 
 function getNextBoundary() {
-  const now = getSouthCarolinaTime();
-  const secondsUntilBoundary = ((30 - (now.minute % 30)) * 60) - now.second;
-  return new Date(Date.now() + Math.max(secondsUntilBoundary * 1000, 1000));
+  return new Date(Date.now() + (30 * 60 * 1000));
 }
 
 function getHalfHourSlot(date) {
@@ -227,6 +225,15 @@ async function rotateShayari() {
   currentShayariIndex = pickTimeBasedIndex();
   renderShayari(currentShayariIndex);
   incrementShayariCount();
+}
+
+async function createNewSharedShayari() {
+  const result = await callSupabase('create_manual_shayari', {
+    p_slot: getHalfHourSlot(getSouthCarolinaTime()),
+    p_next_time: getNextBoundary().toISOString()
+  });
+  renderMessage(result);
+  updateSharedStats(result);
 }
 
 function incrementShayariCount() {
@@ -270,18 +277,18 @@ function initializePage() {
   }
   updateClock();
   updateVisitLog();
-  loadSharedShayari();
+  if (hasSupabase) {
+    createNewSharedShayari().catch((error) => {
+      console.warn('Shared shayari unavailable.', error);
+      document.getElementById('shayariText').textContent = 'નવી શાયરી લાવવામાં અત્યારે મુશ્કેલી આવી છે. કૃપા કરીને ફરી પ્રયાસ કરો.';
+    });
+  }
 }
 
 document.getElementById('refreshButton').addEventListener('click', async () => {
   if (hasSupabase) {
     try {
-      const result = await callSupabase('create_manual_shayari', {
-        p_slot: getHalfHourSlot(getSouthCarolinaTime()),
-        p_next_time: getNextBoundary().toISOString()
-      });
-      renderMessage(result);
-      updateSharedStats(result);
+      await createNewSharedShayari();
       return;
     } catch (error) {
       console.warn('Shared shayari unavailable; using local fallback.', error);
@@ -301,19 +308,12 @@ document.getElementById('revealButton').addEventListener('click', () => {
   button.textContent = secretMessage.classList.contains('hidden') ? 'સંકેત ખોલો 💌' : 'સંકેત બંધ કરો 🔒';
 });
 
-function scheduleHalfHourRotation() {
-  const now = getSouthCarolinaTime();
-  const secondsUntilBoundary = ((30 - (now.minute % 30)) * 60) - now.second;
-
-  window.setTimeout(() => {
-    rotateShayari();
-    window.setInterval(() => rotateShayari(), 30 * 60 * 1000);
-  }, Math.max(secondsUntilBoundary * 1000, 1000));
-}
-
 setInterval(() => {
   updateClock();
 }, 1000);
 
+setInterval(() => {
+  if (hasSupabase) loadSharedShayari();
+}, 30 * 1000);
+
 initializePage();
-scheduleHalfHourRotation();

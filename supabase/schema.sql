@@ -95,7 +95,7 @@ declare
   created jsonb;
 begin
   select * into state from public.shayari_state where id = true for update;
-  if state.current_slot <> p_slot then
+  if state.current_shayari = '{}'::jsonb or state.next_created_at <= now() then
     created := public.make_unique_shayari(p_slot, 'automatic');
     update public.shayari_state
     set total_created = total_created + 1,
