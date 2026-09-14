@@ -135,25 +135,12 @@ function updateClock() {
   document.body.dataset.theme = timeInfo.theme;
 }
 
-function typewriter(element, text, speed = 22) {
-  element.textContent = '';
-  let i = 0;
-  const timer = setInterval(() => {
-    if (i < text.length) {
-      element.textContent += text.charAt(i);
-      i += 1;
-    } else {
-      clearInterval(timer);
-    }
-  }, speed);
-}
-
 function renderShayari(index) {
   renderMessage(shayariList[index]);
 }
 
 function renderMessage(selected) {
-  typewriter(document.getElementById('shayariText'), selected.text.split('\n').join(' '));
+  document.getElementById('shayariText').textContent = selected.text.split('\n').join(' ');
   document.getElementById('letterGreeting').textContent = getTimeGreeting(getSouthCarolinaTime());
   document.getElementById('funnyLine').textContent = selected.funny;
   document.getElementById('loveReason').textContent = selected.reason;
