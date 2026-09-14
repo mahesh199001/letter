@@ -22,9 +22,30 @@ create table if not exists public.shayaris (
   secret text not null
 );
 
+alter table public.shayari_state
+  add column if not exists total_page_opens bigint not null default 0;
+
 insert into public.shayari_state (id)
 values (true)
 on conflict (id) do nothing;
+
+create or replace function public.record_page_open()
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  next_count bigint;
+begin
+  update public.shayari_state
+  set total_page_opens = total_page_opens + 1
+  where id = true
+  returning total_page_opens into next_count;
+
+  return jsonb_build_object('total_page_opens', next_count);
+end;
+$$;
 
 alter table public.shayari_state enable row level security;
 alter table public.shayaris enable row level security;
@@ -135,6 +156,7 @@ $$;
 
 grant execute on function public.get_current_shayari(bigint, timestamptz) to anon, authenticated;
 grant execute on function public.create_manual_shayari(bigint, timestamptz) to anon, authenticated;
+grant execute on function public.record_page_open() to anon, authenticated;
 revoke all on public.shayari_state from anon, authenticated;
 revoke all on public.shayaris from anon, authenticated;
 

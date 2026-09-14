@@ -236,6 +236,11 @@ async function createNewSharedShayari() {
   updateSharedStats(result);
 }
 
+async function recordSharedPageOpen() {
+  const result = await callSupabase('record_page_open', {});
+  document.getElementById('visitCount').textContent = String(result.total_page_opens ?? 0);
+}
+
 function incrementShayariCount() {
   const nextCount = Number(localStorage.getItem(shayariCountKey) || 0) + 1;
   localStorage.setItem(shayariCountKey, String(nextCount));
@@ -262,7 +267,9 @@ function updateVisitLog() {
   const trimmed = logs.slice(0, 10);
   localStorage.setItem('roshniLovePageLogs', JSON.stringify(trimmed));
 
-  document.getElementById('visitCount').textContent = String(trimmed.length);
+  if (!hasSupabase) {
+    document.getElementById('visitCount').textContent = String(trimmed.length);
+  }
   document.getElementById('lastVisit').textContent = entry;
 
   const list = document.getElementById('visitLogs');
@@ -278,7 +285,7 @@ function initializePage() {
   updateClock();
   updateVisitLog();
   if (hasSupabase) {
-    createNewSharedShayari().catch((error) => {
+    Promise.all([recordSharedPageOpen(), createNewSharedShayari()]).catch((error) => {
       console.warn('Shared shayari unavailable.', error);
       document.getElementById('shayariText').textContent = 'નવી શાયરી લાવવામાં અત્યારે મુશ્કેલી આવી છે. કૃપા કરીને ફરી પ્રયાસ કરો.';
     });
