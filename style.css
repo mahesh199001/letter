@@ -381,6 +381,21 @@ blockquote {
   margin-bottom: 1rem;
 }
 
+.shayari-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.4rem;
+  margin: 0 auto 1rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.shayari-meta strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
 .primary-btn,
 .secondary-btn {
   border: none;

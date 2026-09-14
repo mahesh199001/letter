@@ -61,6 +61,8 @@ const southCarolinaFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 let currentShayariIndex = 0;
+const supabaseConfig = window.SUPABASE_CONFIG || { url: '', anonKey: '' };
+const hasSupabase = Boolean(supabaseConfig.url && supabaseConfig.anonKey);
 
 function toGujaratiNumber(value) {
   return String(value)
@@ -147,12 +149,72 @@ function typewriter(element, text, speed = 22) {
 }
 
 function renderShayari(index) {
-  const selected = shayariList[index];
+  renderMessage(shayariList[index]);
+}
+
+function renderMessage(selected) {
   typewriter(document.getElementById('shayariText'), selected.text.split('\n').join(' '));
   document.getElementById('letterGreeting').textContent = getTimeGreeting(getSouthCarolinaTime());
   document.getElementById('funnyLine').textContent = selected.funny;
   document.getElementById('loveReason').textContent = selected.reason;
   document.getElementById('secretMessage').textContent = selected.secret;
+}
+
+function formatSharedTime(value) {
+  if (!value) return '--';
+  return new Intl.DateTimeFormat('en-IN', {
+    timeZone: SOUTH_CAROLINA_TIME_ZONE,
+    day: '2-digit',
+    month: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit'
+  }).format(new Date(value));
+}
+
+function updateSharedStats(result) {
+  document.getElementById('shayariCount').textContent = String(result.total_created ?? 0);
+  document.getElementById('lastShayariCreated').textContent = formatSharedTime(result.last_created_at);
+  document.getElementById('nextShayariCreated').textContent = formatSharedTime(result.next_created_at);
+}
+
+async function callSupabase(functionName, body) {
+  const response = await fetch(`${supabaseConfig.url}/rest/v1/rpc/${functionName}`, {
+    method: 'POST',
+    headers: {
+      apikey: supabaseConfig.anonKey,
+      Authorization: `Bearer ${supabaseConfig.anonKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) throw new Error(`Supabase request failed: ${response.status}`);
+  return response.json();
+}
+
+async function loadSharedShayari() {
+  if (!hasSupabase) return false;
+
+  try {
+    const now = getSouthCarolinaTime();
+    const result = await callSupabase('get_current_shayari', {
+      p_slot: getHalfHourSlot(now),
+      p_next_time: getNextBoundary().toISOString()
+    });
+    renderMessage(result);
+    updateSharedStats(result);
+    return true;
+  } catch (error) {
+    console.warn('Shared shayari unavailable; using local fallback.', error);
+    return false;
+  }
+}
+
+function getNextBoundary() {
+  const now = getSouthCarolinaTime();
+  const secondsUntilBoundary = ((30 - (now.minute % 30)) * 60) - now.second;
+  return new Date(Date.now() + Math.max(secondsUntilBoundary * 1000, 1000));
 }
 
 function getHalfHourSlot(date) {
@@ -172,7 +234,8 @@ function randomShayariIndex() {
   return next;
 }
 
-function rotateShayari() {
+async function rotateShayari() {
+  if (await loadSharedShayari()) return;
   currentShayariIndex = pickTimeBasedIndex();
   renderShayari(currentShayariIndex);
   incrementShayariCount();
@@ -214,12 +277,23 @@ function updateVisitLog() {
 function initializePage() {
   currentShayariIndex = pickTimeBasedIndex();
   renderShayari(currentShayariIndex);
-  incrementShayariCount();
+  if (!hasSupabase) incrementShayariCount();
   updateClock();
   updateVisitLog();
+  loadSharedShayari();
 }
 
-document.getElementById('refreshButton').addEventListener('click', () => {
+document.getElementById('refreshButton').addEventListener('click', async () => {
+  if (hasSupabase) {
+    try {
+      const result = await callSupabase('create_manual_shayari', { p_slot: Date.now() });
+      renderMessage(result);
+      updateSharedStats(result);
+      return;
+    } catch (error) {
+      console.warn('Shared shayari unavailable; using local fallback.', error);
+    }
+  }
   currentShayariIndex = randomShayariIndex();
   renderShayari(currentShayariIndex);
   incrementShayariCount();
@@ -238,7 +312,7 @@ function scheduleHalfHourRotation() {
 
   window.setTimeout(() => {
     rotateShayari();
-    window.setInterval(rotateShayari, 30 * 60 * 1000);
+    window.setInterval(() => rotateShayari(), 30 * 60 * 1000);
   }, Math.max(secondsUntilBoundary * 1000, 1000));
 }
 
