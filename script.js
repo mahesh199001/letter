@@ -286,7 +286,7 @@ function initializePage() {
 document.getElementById('refreshButton').addEventListener('click', async () => {
   if (hasSupabase) {
     try {
-      const result = await callSupabase('create_manual_shayari', { p_slot: Date.now() });
+      const result = await callSupabase('create_manual_shayari', { p_slot: getHalfHourSlot(getSouthCarolinaTime()) });
       renderMessage(result);
       updateSharedStats(result);
       return;

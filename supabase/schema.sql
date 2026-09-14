@@ -114,6 +114,7 @@ begin
   update public.shayari_state
   set total_created = total_created + 1,
       last_created_at = now(),
+      current_slot = p_slot,
       current_shayari = created
   where id = true;
   return created || jsonb_build_object('total_created', state.total_created + 1, 'last_created_at', now(), 'next_created_at', state.next_created_at);
