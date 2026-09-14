@@ -194,7 +194,7 @@ async function loadSharedShayari() {
     updateSharedStats(result);
     return true;
   } catch (error) {
-    console.warn('Shared shayari unavailable; using local fallback.', error);
+    console.warn('Shared shayari unavailable.', error);
     return false;
   }
 }
@@ -270,12 +270,7 @@ function initializePage() {
   }
   updateClock();
   updateVisitLog();
-  loadSharedShayari().then((loaded) => {
-    if (!loaded && hasSupabase) {
-      renderShayari(currentShayariIndex);
-      incrementShayariCount();
-    }
-  });
+  loadSharedShayari();
 }
 
 document.getElementById('refreshButton').addEventListener('click', async () => {
@@ -290,6 +285,8 @@ document.getElementById('refreshButton').addEventListener('click', async () => {
       return;
     } catch (error) {
       console.warn('Shared shayari unavailable; using local fallback.', error);
+      document.getElementById('shayariText').textContent = 'નવી શાયરી લાવવામાં અત્યારે મુશ્કેલી આવી છે. કૃપા કરીને ફરી પ્રયાસ કરો.';
+      return;
     }
   }
   currentShayariIndex = randomShayariIndex();
