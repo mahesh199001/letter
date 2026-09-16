@@ -108,6 +108,26 @@ const floatingGujaratiNotes = [
   'તારી હાજરી મારા માટે શાંત સંગીત જેવી છે', 'તારી નાની ખુશી પણ મારા માટે મોટો ઉત્સવ છે',
   'મારું હૃદય તારી એક વાતની રાહ જુએ છે 💌', 'તું છે એટલે સામાન્ય પળ પણ ખાસ છે'
 ];
+const floatingGujaratiOpenings = [
+  'રોશની, ', 'મારી પ્રિય રોશની, ', 'આજની પળે ', 'મારા હૃદયમાં ', 'ધીમે ધીમે ',
+  'સાંજના રંગોમાં ', 'ચાંદનીની વચ્ચે ', 'દરેક શ્વાસ સાથે ', 'મારી દરેક પ્રાર્થનામાં ', 'આ નાનકડા સંદેશમાં '
+];
+const floatingGujaratiMiddles = [
+  'તારી યાદ', 'તારું સ્મિત', 'તારો અવાજ', 'તારી કાળજી', 'તારી સાદગી',
+  'તારી હાજરી', 'તારી મીઠી વાત', 'તારી આંખોની ચમક', 'તારી ખુશી', 'તારા નામની ધૂન'
+];
+const floatingGujaratiEndings = [
+  'મારા મનને શાંત કરી દે છે 💗', 'મારી દુનિયાને સુંદર બનાવી દે છે 💞',
+  'મારા દિવસમાં પ્રેમ ભરી દે છે 💖', 'મને ફરીથી સ્મિત કરાવી દે છે 🌷',
+  'મારા હૃદયને તારી નજીક લઈ આવે છે 💌', 'મારી દરેક પળને ખાસ બનાવી દે છે ✨',
+  'મને તને વધુ પ્રેમ કરવાનું કારણ આપે છે 💘', 'મારી રાતને નરમ પ્રકાશથી ભરી દે છે 🌙',
+  'મારી અંદર એક મીઠી આશા જગાવે છે 🫶', 'મને યાદ અપાવે છે કે તું કેટલી ખાસ છે 🌹'
+];
+const generatedFloatingGujaratiNotes = floatingGujaratiOpenings.flatMap((opening) => (
+  floatingGujaratiMiddles.flatMap((middle) => (
+    floatingGujaratiEndings.map((ending) => `${opening}${middle} ${ending}`)
+  ))
+));
 const heartRainStyles = [
   ['#ff4f81', '♥'], ['#ff7aa8', '💖'], ['#e83e8c', '♡'], ['#ff5d5d', '💘'],
   ['#f43f5e', '💕'], ['#d946ef', '💗'], ['#fb7185', '❣️'], ['#ec4899', '💞'],
@@ -127,7 +147,11 @@ function getNextFloatingLoveNote() {
 }
 
 function getNextFloatingGujaratiNote() {
-  if (!floatingGujaratiNoteQueue.length) floatingGujaratiNoteQueue = [...floatingGujaratiNotes].sort(() => Math.random() - 0.5);
+  if (!floatingGujaratiNoteQueue.length) {
+    floatingGujaratiNoteQueue = [...floatingGujaratiNotes, ...generatedFloatingGujaratiNotes]
+      .filter((note, index, notes) => notes.indexOf(note) === index)
+      .sort(() => Math.random() - 0.5);
+  }
   return floatingGujaratiNoteQueue.shift();
 }
 
@@ -180,7 +204,9 @@ let musicStep = 0;
 let musicPlaying = false;
 let musicUserStopped = false;
 let musicStartInFlight = false;
+let musicStartRequest = 0;
 let musicUnlockHandler = null;
+let galleryInteractionTimer = null;
 const supabaseConfig = window.SUPABASE_CONFIG || { url: '', anonKey: '' };
 const hasSupabase = Boolean(supabaseConfig.url && supabaseConfig.anonKey);
 
@@ -565,17 +591,19 @@ function playMelodyBar() {
 async function startRomanticMusic() {
   if (musicPlaying || musicStartInFlight) return;
   musicStartInFlight = true;
+  const requestId = musicStartRequest + 1;
+  musicStartRequest = requestId;
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
-  if (!musicContext) {
-    musicContext = new AudioContextClass();
-    musicMasterGain = musicContext.createGain();
-    musicMasterGain.gain.value = 0.58;
-    musicMasterGain.connect(musicContext.destination);
-  }
   try {
+    if (!AudioContextClass) return;
+    if (!musicContext) {
+      musicContext = new AudioContextClass();
+      musicMasterGain = musicContext.createGain();
+      musicMasterGain.gain.value = 0.58;
+      musicMasterGain.connect(musicContext.destination);
+    }
     await musicContext.resume();
-    if (musicContext.state !== 'running') return;
+    if (requestId !== musicStartRequest || musicUserStopped || musicContext.state !== 'running') return;
     musicUserStopped = false;
     musicPlaying = true;
     playMelodyBar();
@@ -588,24 +616,34 @@ async function startRomanticMusic() {
       document.removeEventListener('pointerdown', musicUnlockHandler);
       musicUnlockHandler = null;
     }
+  } catch (error) {
+    musicPlaying = false;
+    updateMusicButton(false);
   } finally {
     musicStartInFlight = false;
   }
 }
 
+function updateMusicButton(isPlaying) {
+  const button = document.getElementById('musicToggle');
+  if (!button) return;
+  button.textContent = isPlaying ? '♫ સંગીત બંધ કરો' : '♫ સંગીત ચાલુ કરો';
+  button.setAttribute('aria-pressed', String(isPlaying));
+  button.classList.toggle('is-playing', isPlaying);
+}
+
 async function stopRomanticMusic() {
   musicUserStopped = true;
+  musicStartRequest += 1;
   musicPlaying = false;
   window.clearInterval(musicTimer);
   musicTimer = null;
-  if (musicContext) await musicContext.suspend();
-  const button = document.getElementById('musicToggle');
-  button.textContent = '♫ સંગીત ચાલુ કરો';
-  button.setAttribute('aria-pressed', 'false');
-  button.classList.remove('is-playing');
+  if (musicContext && musicContext.state === 'running') await musicContext.suspend();
+  updateMusicButton(false);
 }
 
-function unlockMusicOnGesture() {
+function unlockMusicOnGesture(event) {
+  if (event?.target?.closest('#musicToggle')) return;
   if (!musicUserStopped) startRomanticMusic().catch(() => {});
 }
 
@@ -674,7 +712,7 @@ function animateHandwrittenText(element, text) {
 
 function advancePhotoFilm() {
   const gallery = document.getElementById('memoryGallery');
-  if (!gallery || document.body.classList.contains('spotlight-active')) return;
+  if (!gallery || document.body.classList.contains('spotlight-active') || document.hidden || gallery.dataset.userScrolling === 'true') return;
   const card = gallery.querySelector('.memory-photo-card');
   if (!card) return;
   const step = card.getBoundingClientRect().width + 13;
@@ -1240,7 +1278,7 @@ function setupLoveInteractions() {
   setupLetterGate();
   setupMoonMode();
   document.getElementById('musicToggle').addEventListener('click', () => {
-    if (musicPlaying) stopRomanticMusic();
+    if (musicPlaying || musicStartInFlight) stopRomanticMusic();
     else {
       musicUserStopped = false;
       startRomanticMusic();
@@ -1262,6 +1300,16 @@ function setupLoveInteractions() {
   localStorage.setItem('roshniFeaturedPhoto', String(featuredPhotoIndex));
   renderHeroPhoto();
   renderPhotoGallery();
+  const gallery = document.getElementById('memoryGallery');
+  ['pointerdown', 'touchstart', 'wheel'].forEach((eventName) => {
+    gallery.addEventListener(eventName, () => {
+      gallery.dataset.userScrolling = 'true';
+      window.clearTimeout(galleryInteractionTimer);
+      galleryInteractionTimer = window.setTimeout(() => {
+        gallery.dataset.userScrolling = 'false';
+      }, 7000);
+    }, { passive: true });
+  });
   renderConstellation();
   document.getElementById('clearSpotlightButton').addEventListener('click', clearPhotoSpotlight);
 
@@ -1299,7 +1347,7 @@ function setupLoveInteractions() {
 
   document.addEventListener('pointerdown', createClickHeart, { passive: true });
   window.setInterval(renderHeroPhoto, 4500);
-  window.setInterval(advancePhotoFilm, 6200);
+  window.setInterval(advancePhotoFilm, 10000);
   window.setInterval(createHeartShower, 5200);
   window.setInterval(createLovePetalShower, 6800);
 }

@@ -21,7 +21,7 @@ html,
 body {
   margin: 0;
   min-height: 100%;
-  font-family: 'Noto Sans Gujarati', 'Inter', sans-serif;
+  font-family: 'Anek Gujarati', 'Noto Sans Gujarati', 'Inter', sans-serif;
   color: var(--text);
   background: linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
   background-size: 200% 200%;
@@ -1425,11 +1425,14 @@ body[data-theme="afternoon"] .hero-overline {
 }
 
 h1 {
-  max-width: 10ch;
+  max-width: 14ch;
   margin: 0;
-  font-size: clamp(3.2rem, 7vw, 6.4rem);
-  line-height: 0.98;
-  letter-spacing: -0.04em;
+  font-family: 'Swaminarayan', 'Noto Serif Gujarati', 'Anek Gujarati', serif;
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  line-height: 1.12;
+  letter-spacing: normal;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .subtitle {
@@ -1606,7 +1609,7 @@ h1 {
   box-shadow: none;
 }
 
-.featured-note blockquote { max-width: 780px; margin: 0.8rem 0; font-size: clamp(1.7rem, 4vw, 3.4rem); line-height: 1.2; }
+.featured-note blockquote { max-width: 780px; margin: 0.8rem 0; font-family: 'Swaminarayan', 'Noto Serif Gujarati', 'Anek Gujarati', serif; font-size: clamp(1.45rem, 3.2vw, 2.8rem); line-height: 1.5; }
 .featured-note blockquote.is-writing::after {
   display: inline-block;
   width: 0.08em;
@@ -1742,6 +1745,73 @@ body.moon-mode .sun-glow { opacity: 0.12; }
   .memory-photo-card { flex-basis: min(280px, 80vw); }
   .moon-secret { align-items: flex-start; }
 }
+
+/* Keep Gujarati glyphs readable when messages grow or the viewport narrows. */
+button,
+input,
+textarea,
+select,
+.hero-overline,
+.subtitle,
+.section-heading,
+.shayari-kicker,
+.moon-secret,
+.floating-love-note,
+.feature-copy,
+.open-when-letter,
+.journey-item,
+.love-signoff p {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+h1,
+.hero-overline,
+.featured-note blockquote,
+.hero-photo figcaption strong {
+  font-family: 'Swaminarayan', 'Noto Serif Gujarati', 'Anek Gujarati', serif;
+}
+
+.floating-love-note > span:last-child {
+  min-width: 0;
+}
+
+.heart-shower,
+.love-petal-shower,
+.floating-notes {
+  contain: layout style;
+  pointer-events: none;
+}
+
+@media (max-width: 700px) {
+  .hero-copy h1,
+  h1 {
+    max-width: 100%;
+    font-size: clamp(2.45rem, 12vw, 4.2rem);
+  }
+
+  .featured-note blockquote {
+    max-width: 100%;
+    font-size: clamp(1.35rem, 6.2vw, 2.05rem);
+  }
+
+  .hero-actions,
+  .top-tools {
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
 @keyframes heart-ring { 0% { opacity: 0.8; transform: scale(0.78); } 100% { opacity: 0; transform: scale(1.35); } }
 .text-btn { font-size: 0.75rem; }
 .open-when-panel { margin-top: 1rem; padding: 1.2rem; border: 1px solid color-mix(in srgb, var(--text) 13%, transparent); border-radius: 18px; background: color-mix(in srgb, var(--card) 45%, transparent); }
@@ -1785,5 +1855,29 @@ body.moon-mode .sun-glow { opacity: 0.12; }
   .hero-actions .primary-btn, .hero-actions .secondary-btn { width: 100%; }
   .note-meta { width: 100%; margin-left: 0; }
   .memory-gallery, .heart-section, .love-journey-panel { margin-top: 2.7rem; }
+}
+
+/* Keep the final mobile overrides overflow-safe and visually consistent. */
+body,
+.floating-love-note,
+.feature-copy,
+.open-when-letter,
+.journey-item,
+.love-signoff p {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+h1,
+.hero-overline,
+.featured-note blockquote,
+.hero-photo figcaption strong {
+  font-family: 'Swaminarayan', 'Noto Serif Gujarati', 'Anek Gujarati', serif !important;
+}
+
+.featured-note blockquote {
+  max-width: 100%;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
