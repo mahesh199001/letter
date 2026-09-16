@@ -1209,8 +1209,8 @@ function createFloatingLoveNote(kind = 'male') {
 
 function scheduleFloatingLoveNote(kind = 'gujarati') {
   const delay = kind === 'gujarati'
-    ? 4000 + Math.random() * 1000
-    : 25000 + Math.random() * 5000;
+    ? 10000 + Math.random() * 5000
+    : 30000 + Math.random() * 15000;
   window.setTimeout(() => {
     if (!floatingWhisperActive) createFloatingLoveNote(kind);
     scheduleFloatingLoveNote(kind);
