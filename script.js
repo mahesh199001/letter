@@ -1284,7 +1284,6 @@ function setupLoveInteractions() {
       startRomanticMusic();
     }
   });
-  startRomanticMusic().catch(() => {});
   musicUnlockHandler = unlockMusicOnGesture;
   document.addEventListener('pointerdown', musicUnlockHandler, { passive: true });
   createHeartShower();
