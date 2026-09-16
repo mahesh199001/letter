@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="gu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>મારી રોશની - પ્રેમ પત્ર</title>
+    <meta
+      name="description"
+      content="રોશની માટેનો જીવંત ગુજરાતી પ્રેમપત્ર, રોજની શાયરી, તસવીરો અને નાની ખુશીઓ સાથે."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Noto+Serif+Gujarati:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=2026-09-16-45" />
+  </head>
+  <body data-theme="night">
+    <div class="sky-particles"></div>
+    <div class="sun-glow glow-one"></div>
+    <div class="sun-glow glow-two"></div>
+    <div class="floating-heart heart-1">❤</div>
+    <div class="floating-heart heart-2">❤</div>
+    <div class="floating-heart heart-3">❤</div>
+    <div id="heartShower" class="heart-shower" aria-hidden="true"></div>
+    <div id="lovePetalShower" class="love-petal-shower" aria-hidden="true"></div>
+    <div id="floatingNotes" class="floating-notes" aria-hidden="true"></div>
+
+    <div id="letterGate" class="letter-gate" role="dialog" aria-modal="true" aria-labelledby="letterGateTitle">
+      <div class="letter-envelope">
+        <span class="envelope-star">✦</span>
+        <div class="envelope-seal">RS</div>
+        <p class="section-kicker">એક પત્ર, ફક્ત તારા માટે</p>
+        <h2 id="letterGateTitle">રોશની માટે</h2>
+        <p>આ પત્ર ખોલતાં પહેલાં એક નાનું સ્મિત કરજે.</p>
+        <button type="button" id="openLetterButton" class="envelope-open-button">પ્રેમપત્ર ખોલો <span>♡</span></button>
+      </div>
+    </div>
+
+    <main class="page-shell">
+      <section class="love-card">
+        <header class="top-bar">
+          <div class="top-badge">રોશની માટેનો પ્રેમપત્ર</div>
+          <div class="top-tools"><div class="live-timer"><span id="dayDisplay" class="live-day">--</span><span id="dateDisplay">--</span><strong id="timeDisplay">--:--</strong></div><button type="button" id="musicToggle" class="music-toggle" aria-pressed="false">♫ સંગીત ચાલુ કરો</button><button type="button" id="moonModeButton" class="moon-mode-button" aria-pressed="false">ચાંદનું રહસ્ય 🌙</button></div>
+        </header>
+  <link rel="stylesheet" href="style.css?v=2026-09-16-49" />
+
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <div class="mood-strip"><span id="timeMood">સવારની નમ્રતા ☀️</span></div>
+            <p id="heroOverline" class="hero-overline">આજની એક નાની લાગણી, ફક્ત તારા માટે</p>
+            <h1 id="heroTitle">રોશની, તું મારી સૌથી સુંદર વાત છે.</h1>
+            <p id="heroSubtitle" class="subtitle">આજની લાગણી વાંચજે, સ્મિત આખો દિવસ રાખજે.</p>
+            <div class="hero-actions">
+              <button type="button" id="refreshButton" class="primary-btn">આજની લાગણી ↗</button>
+              <button type="button" id="revealButton" class="secondary-btn">નાનું રહસ્ય</button>
+            </div>
+          </div>
+          <figure class="hero-photo">
+            <div class="hero-photo-media">
+              <img id="heroPhotoImage" src="photos/roshni-01.jpg" alt="રોશનીનું સુંદર સ્મિત" />
+            </div>
+            <figcaption><span id="heroPhotoIndex">૦૧ / ૧૫</span><strong id="heroPhotoCaption">તું હસે એટલે દિવસ સારો.</strong></figcaption>
+          </figure>
+        </div>
+
+        <div class="shayari-panel featured-note">
+          <div class="shayari-kicker" aria-label="આજની શાયરી"><span class="shayari-kicker-mark">✦</span><span>આજની શાયરી:</span></div>
+          <p class="mini-title" id="letterGreeting">પ્રિય રોશની, શુભ રાત્રી 💞</p>
+          <blockquote id="shayariText" aria-live="polite">શાયરી તૈયાર થઈ રહી છે...</blockquote>
+          <p id="funnyLine" class="funny-line">તારી સાથે હસવું એ મારા દિવસની સૌથી મીઠી પળ છે 😄</p>
+        </div>
+
+        <div id="moonSecret" class="moon-secret hidden" aria-live="polite"><span class="moon-secret-mark">☾</span><p>ચાંદને પૂછ્યું કે તું એટલી સુંદર કેમ લાગે છે; તેણે કહ્યું, “મારી રોશની તો તારા સ્મિતમાંથી આવે છે.”</p></div>
+
+        <div class="reason-box">
+          <p id="reasonTitle" class="reason-title">આ શાયરી તારા માટે કેમ ખાસ છે 🌷</p>
+          <p id="loveReason">રોશની માટે એક ખાસ સંદેશ તૈયાર થઈ રહ્યો છે.</p>
+        </div>
+
+        <div id="secretMessage" class="secret-message hidden">રોશની, તારા હાસ્યથી મારી દુનિયા વધુ હળવી બની ગઈ છે. તારો સાથ મારી સૌથી સુંદર ટેવ છે, તારું સ્મિત મારી શાંતિ છે અને તારી યાદ મારી રાતનું સૌથી સુંદર નક્ષત્ર છે. હું તને હંમેશા પ્રેમ કરું છું 💖</div>
+
+        <section class="memory-gallery" aria-labelledby="memoryGalleryTitle">
+          <div class="section-heading compact-heading"><p class="section-kicker">યાદોની ગેલેરી / 📷</p><h2 id="memoryGalleryTitle">તારી પળો, મારી દુનિયા</h2><p>તારીખો નહીં. બસ, તું.</p><div class="gallery-tools"><span class="reel-hint">ધીમે સરકતી યાદો</span><button type="button" id="clearSpotlightButton" class="spotlight-clear hidden">ફોકસ બંધ કરો</button></div></div>
+          <div id="galleryFilters" class="gallery-filters" role="toolbar" aria-label="તસવીરોની શ્રેણી"></div>
+          <div id="memoryGallery" class="memory-grid"></div>
+        </section>
+
+        <section class="heart-section" aria-labelledby="heartSectionTitle">
+          <div class="section-heading"><p class="section-kicker">આજનું તારા માટે</p><h2 id="heartSectionTitle">આજની નાની ખુશી</h2><p>બાકી બધું નીચે છે. પહેલાં આ વાંચ.</p></div>
+          <div class="heart-grid">
+            <article class="heart-panel reason-card"><p class="panel-label">કારણોની પેટી 🌷</p><p id="reasonNumber" class="panel-number">કારણ ૧</p><p id="dailyReason" class="feature-copy">તારી નાની નાની વાતોમાં મને મોટી ખુશી મળી જાય છે.</p><button type="button" id="anotherReasonButton" class="text-btn">બીજું કારણ ↗</button></article>
+            <article class="heart-panel surprise-card"><p class="panel-label">આજનું સરપ્રાઇઝ 🎁</p><p id="surpriseType" class="panel-number">આજની નાની ભેટ</p><p id="dailySurprise" class="feature-copy surprise-hidden">આજની ભેટ તારા માટે તૈયાર થઈ રહી છે.</p><button type="button" id="surpriseButton" class="text-btn">સરપ્રાઇઝ ખોલો ✨</button></article>
+          </div>
+
+          <div class="open-when-panel"><div class="section-heading compact-heading"><p class="section-kicker">જ્યારે વાંચવું હોય ત્યારે</p><h2>જ્યારે પણ મન થાય</h2></div><div id="openWhenList" class="open-when-list"></div><div id="openWhenLetter" class="open-when-letter hidden" aria-live="polite"></div></div>
+
+          <div class="interactive-row"><div class="heart-panel interaction-card heartbeat-card"><p class="panel-label">એક નાનું કામ કરશ? 💌</p><p class="heartbeat-invite">મારા દિવસમાં તારી ધડકન મોકલ</p><div class="heart-stage"><span class="heart-orbit heart-orbit-one"></span><span class="heart-orbit heart-orbit-two"></span><button type="button" id="heartButton" class="heart-button" aria-label="મારા માટે હૃદય મોકલો">♥</button></div><p id="heartResponse" class="heart-response" aria-live="polite">હૃદયને સ્પર્શ કરજે</p><div class="heart-count-line"><strong id="heartCount">૦</strong><span>ધડકનો મારી પાસે આવી</span></div><p id="loveCounter" class="counter-copy">૦ દિવસથી તું મારા હૃદયમાં છે</p></div><div class="heart-panel promise-card"><p class="panel-label">આજનું વચન 🤍</p><p id="journeyPromise" class="feature-copy">તારી ખુશીને હું ક્યારેય નાની વાત નહીં માનું.</p></div></div>
+          <div id="unlockedMessage" class="unlocked-message hidden" aria-live="polite">તું અહીં સુધી આવી છે, એટલે આ નાનું રહસ્ય હવે તારું છે: તું મારા જીવનની સૌથી સુંદર પસંદગી છે 💖</div>
+        </section>
+
+        <section class="love-journey-panel" aria-labelledby="loveJourneyTitle"><div class="section-heading compact-heading"><p class="section-kicker">આપણી નાની યાદોની પેટી 🤍</p><h2 id="loveJourneyTitle">નાની નાની વાતો</h2><p>આ જગ્યા મુલાકાતો ગણતી નથી; સુંદર પળો સાચવે છે.</p></div><div class="journey-grid"><div class="journey-item"><span>આપણી સફર</span><strong id="journeyDays">૦ દિવસ</strong></div><div class="journey-item"><span>મોકલેલા હૃદય</span><strong id="journeyHearts">૦</strong></div><div class="journey-item"><span>ખોલેલા પ્રેમપત્રો</span><strong id="journeyLetters">૦</strong></div></div></section>
+        <footer class="love-signoff"><span class="signoff-line"></span><p>આ પત્ર અહીં પૂરો થાય છે, પણ તારા માટેનો પ્રેમ નહીં.</p><strong>હંમેશા તારો, <span>RS</span></strong></footer>
+      </section>
+    </main>
+
+    <div id="photoLightbox" class="photo-lightbox hidden" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption">
+      <button type="button" id="lightboxClose" class="lightbox-close" aria-label="તસવીર બંધ કરો">×</button>
+      <div class="lightbox-content">
+        <img id="lightboxImage" src="" alt="" />
+        <p id="lightboxCaption"></p>
+      </div>
+    </div>
+
+    <script src="supabase-config.js?v=2026-09-16-39"></script>
+    <script src="script.js?v=2026-09-16-49"></script>
+  </body>
+</html>
